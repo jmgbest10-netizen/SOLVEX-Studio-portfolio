@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLVEX — 3D Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e11;
+    --surface: #16151a;
+    --surface2: #1e1c23;
+    --accent: #7c6af7;
+    --accent2: #b89cff;
+    --text: #e8e5f0;
+    --muted: #6b6880;
+    --border: #2a2830;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* CURSOR */
+  /* .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.35s cubic-bezier(.25,.46,.45,.94);
+    mix-blend-mode: difference;
+  } */
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 60px;
+    background: linear-gradient(to bottom, #0a0a0aee, transparent);
+  }
+
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    position: relative;
+  }
+
+  .logo .sol { color: var(--text); }
+  .logo .vex {
+    color: var(--accent);
+    text-shadow: 0 0 20px #7c6af799, 0 0 40px #7c6af744;
+  }
+  .logo .tagline {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.5rem;
+    letter-spacing: 0.35em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+  }
+
+  nav ul a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  nav ul a:hover { color: var(--accent); }
+
+  .nav-contact {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 10px 22px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .nav-contact:hover { background: var(--accent2); color: white; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, #7c6af718, transparent),
+      radial-gradient(ellipse 40% 60% at 20% 80%, #b89cff0e, transparent);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(#ffffff05 1px, transparent 1px),
+      linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+  .hero-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+
+  /* SOLVEX HERO BRAND */
+  .solvex-hero-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(4.5rem, 13vw, 11rem);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .solvex-hero-brand .sol-part {
+    color: var(--text);
+  }
+
+  .solvex-hero-brand .vex-part {
+    color: var(--accent);
+    text-shadow:
+      0 0 30px #7c6af7cc,
+      0 0 60px #7c6af766,
+      0 0 100px #7c6af733;
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+
+  .solvex-hero-brand::after {
+    content: 'SOLVEX';
+    position: absolute;
+    top: 3px; left: 3px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: inherit;
+    letter-spacing: inherit;
+    color: transparent;
+    -webkit-text-stroke: 1px #7c6af722;
+    pointer-events: none;
+    animation: glitch 6s infinite;
+  }
+
+  .hero-studio-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { text-shadow: 0 0 30px #7c6af7cc, 0 0 60px #7c6af766, 0 0 100px #7c6af733; }
+    50% { text-shadow: 0 0 50px #7c6af7ff, 0 0 90px #7c6af799, 0 0 130px #7c6af755; }
+  }
+
+  @keyframes glitch {
+    0%, 92%, 100% { transform: translate(0); opacity: 0; }
+    93% { transform: translate(-3px, 1px); opacity: 1; }
+    95% { transform: translate(3px, -1px); opacity: 0.5; }
+    97% { transform: translate(-2px, 2px); opacity: 1; }
+    99% { transform: translate(0); opacity: 0; }
+  }
+
+  /* Divider line under SOLVEX */
+  .solvex-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 20px 0 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+    /* font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  } */
+
+  h1 .outline {
+    -webkit-text-stroke: 1px var(--text);
+    color: transparent;
+  }
+
+  h1 .accent { color: var(--accent); }
+
+  .hero-desc {
+    max-width: 420px;
+    margin-top: 32px;
+    line-height: 1.7;
+    color: var(--muted);
+    font-size: 0.95rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 48px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 16px 36px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-primary:hover { background: var(--accent2); color: white; }
+
+  .btn-ghost {
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+  }
+
+  .btn-ghost:hover { color: var(--text); }
+
+  .hero-stats {
+    position: absolute;
+    right: 60px;
+    bottom: 60px;
+    display: flex;
+    gap: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2.2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    background: var(--surface);
+  }
+
+  .marquee {
+    display: flex;
+    gap: 60px;
+    animation: marquee 18s linear infinite;
+    width: max-content;
+  }
+
+  .marquee span {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .marquee span.dot { color: var(--accent); font-size: 1.2rem; }
+
+  /* WORK SECTION */
+  .section {
+    padding: 120px 60px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+
+  .section-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .section-link {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── PROJECT CARDS GRID ── */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  .work-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+  }
+
+  .work-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+  /* Thumbnail area */
+  .card-thumb {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: var(--surface2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .work-card:hover .card-thumb img { transform: scale(1.04); }
+
+  /* Placeholder when no image */
+  .card-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px;
+    background: linear-gradient(135deg, var(--surface2), var(--surface));
+    position: relative;
+  }
+
+  .placeholder-icon { font-size: 3rem; opacity: 0.3; }
+  .placeholder-text {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  /* Badges */
+  .card-badges {
+    position: absolute; top: 14px; right: 14px;
+    display: flex; gap: 6px;
+  }
+
+  .badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 9px;
+    background: var(--bg); color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+
+  .badge.video { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  /* Card info row */
+  .card-info {
+    padding: 22px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1rem;
+  }
+
+  .card-cat {
+    font-size: 0.68rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); margin-top: 4px;
+  }
+
+  .card-arrow {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 1rem;
+    transition: all 0.3s; flex-shrink: 0;
+  }
+
+  .work-card:hover .card-arrow {
+    background: var(--accent); color: var(--bg); border-color: var(--accent);
+  }
+
+  /* ── PROJECT MODAL (full showcase) ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: #000000f0;
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 100%; max-width: 1000px;
+    transform: translateY(30px);
+    transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+    position: relative;
+  }
+
+  .modal-overlay.active .modal { transform: translateY(0); }
+
+  /* Tab bar */
+  .modal-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .modal-tab {
+    flex: 1; padding: 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer;
+    border: none; background: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.25s;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+
+  .modal-tab:hover { color: var(--text); }
+  .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Tab panels */
+  .modal-panel { display: none; }
+  .modal-panel.active { display: block; }
+
+  /* Video panel */
+  .video-wrap {
+    width: 100%; aspect-ratio: 16/9;
+    background: #000; position: relative;
+  }
+
+  .video-wrap video, .video-wrap iframe {
+    width: 100%; height: 100%; border: none; display: block;
+  }
+
+  .video-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    background: var(--bg);
+    color: var(--muted);
+  }
+
+  .video-placeholder .play-icon { font-size: 3rem; opacity: 0.3; }
+  .video-placeholder p { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; }
+
+  /* Images panel */
+  .images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+    background: var(--bg);
+  }
+
+  .images-grid img {
+    width: 100%; aspect-ratio: 4/3;
+    object-fit: cover; display: block;
+    cursor: zoom-in;
+    transition: opacity 0.3s;
+  }
+
+  .images-grid img:hover { opacity: 0.85; }
+
+  .images-placeholder {
+    padding: 80px 40px;
+    text-align: center; color: var(--muted);
+    font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--bg);
+  }
+
+  .images-placeholder .img-icon { font-size: 2.5rem; opacity: 0.2; margin-bottom: 16px; }
+
+  /* Sketchfab panel */
+  .sketchfab-wrap {
+    width: 100%; aspect-ratio: 16/9;
+    background: var(--bg); position: relative;
+  }
+
+  .sketchfab-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+
+  .sketchfab-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    background: var(--bg); color: var(--muted);
+  }
+
+  .sketchfab-placeholder .sf-icon { font-size: 3rem; opacity: 0.2; }
+  .sketchfab-placeholder p { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; }
+
+  /* Modal body (info) */
+  .modal-body { padding: 36px 40px; }
+
+  .modal-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 20px;
+  }
+
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.8rem;
+  }
+
+  .modal-close {
+    background: none; border: 1px solid var(--border);
+    color: var(--text); width: 40px; height: 40px;
+    cursor: pointer; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; flex-shrink: 0;
+  }
+
+  .modal-close:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  .modal-cat {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .modal-desc {
+    color: var(--muted); line-height: 1.8;
+    font-size: 0.92rem; margin-bottom: 28px;
+  }
+
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .tag {
+    font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 6px 14px; color: var(--muted);
+  }
+
+  /* Lightbox for images */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 400;
+    background: #000000f5;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+
+  .lightbox.active { opacity: 1; pointer-events: all; }
+
+  .lightbox img {
+    max-width: 92vw; max-height: 90vh;
+    object-fit: contain; display: block;
+    border: 1px solid var(--border);
+  }
+
+  .lightbox-close {
+    position: absolute; top: 24px; right: 24px;
+    background: none; border: 1px solid #ffffff33;
+    color: white; width: 44px; height: 44px;
+    font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .lightbox-close:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* ABOUT */
+  .about-section {
+    padding: 120px 60px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .about-text {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 0.95rem;
+    margin-top: 20px;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .skill-item {
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .skill-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+
+  .skill-bar {
+    height: 2px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  .skill-fill.animate { transform: scaleX(1); }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 120px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 32px;
+  }
+
+  .contact-big {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .contact-big .outline {
+    -webkit-text-stroke: 1px var(--text);
+    color: transparent;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .contact-link {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .contact-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    padding: 28px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SERVICES */
+  .services-section {
+    padding: 120px 60px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 64px;
+    border: 1px solid var(--border);
+  }
+
+  .service-card {
+    background: var(--surface);
+    padding: 40px 32px;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  .service-card:hover { background: var(--surface2); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-bottom: 28px;
+    opacity: 0.7;
+  }
+
+  .service-icon {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .service-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  .service-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  @media (max-width: 900px) {
+    .services-section { padding: 80px 30px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr; }
+  }
+
+  /* FAQ SECTION */
+  .faq-section {
+    padding: 120px 60px;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-intro {
+    max-width: 760px;
+    margin: 0 auto 80px;
+  }
+
+  .faq-intro-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .faq-intro-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .faq-intro-text {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .faq-why {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 48px 52px;
+    max-width: 900px;
+    margin: 0 auto 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faq-why::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, #7c6af715, transparent 70%);
+    pointer-events: none;
+  }
+
+  .faq-why-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+    color: var(--text);
+    direction: rtl;
+  }
+
+  .faq-why-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+    direction: rtl;
+  }
+
+  .faq-why-points {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .faq-why-point {
+    border: 1px solid var(--border);
+    padding: 20px 22px;
+    background: var(--bg);
+    transition: border-color 0.3s;
+  }
+
+  .faq-why-point:hover { border-color: var(--accent); }
+
+  .faq-why-point-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .faq-why-point-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .faq-why-closing {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--accent);
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  .faq-list {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .faq-item {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .faq-item:hover { border-color: var(--accent); }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 28px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+    gap: 20px;
+  }
+
+  .faq-q-text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .faq-q-icon {
+    color: var(--accent);
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    transition: transform 0.3s;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+  }
+
+  .faq-item.open .faq-q-icon { transform: rotate(45deg); }
+
+  .faq-answer {
+    display: none;
+    padding: 0 32px 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-item.open .faq-answer { display: block; }
+
+  .faq-answer-ar {
+    padding-top: 28px;
+    direction: rtl;
+    margin-bottom: 28px;
+  }
+
+  .faq-answer-en {
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-lang-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .faq-answer-intro {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+
+  .faq-points {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .faq-point {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .faq-point-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+  .faq-point-content { flex: 1; }
+
+  .faq-point-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .faq-point-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .faq-closing {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--accent);
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  .faq-motivational {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .faq-quote {
+    font-size: 0.82rem;
+    color: var(--accent2);
+    font-style: italic;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 900px) {
+    .faq-section { padding: 80px 30px; }
+    .faq-why { padding: 32px 24px; }
+    .faq-why-points { grid-template-columns: 1fr; }
+    .faq-question { padding: 22px 20px; }
+    .faq-answer { padding: 0 20px 24px; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 24px 30px; }
+    nav ul { display: none; }
+    .hero { padding: 100px 30px 60px; }
+    .hero-stats { right: 30px; bottom: 30px; gap: 30px; }
+    .section { padding: 80px 30px; }
+    .work-card:nth-child(n) { grid-column: span 12; }
+    .about-section { padding: 80px 30px; grid-template-columns: 1fr; gap: 48px; }
+    .contact-section { padding: 80px 30px; }
+    footer { padding: 20px 30px; flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo"><span class="sol">SOL</span><span class="vex">VEX</span><span class="tagline">3D Studio</span></a>
+  <ul>
+    <li><a href="#work">Projects</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <!-- <a href="#contact" class="nav-contact" style="background-color: #0f0e11;"></a> -->
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">3D Ad Visuals · Product Brands · Ready-to-Publish</div>
+    <div class="solvex-hero-brand" style="opacity:0;animation:fadeUp 0.9s 0.3s forwards;">
+      <span class="sol-part">SOL</span><span class="vex-part">VEX</span>
+    </div>
+    <div class="hero-studio-tag">We Make It Real</div>
+    <div class="solvex-divider"></div>
+    <p class="hero-desc">
+      We turn your products into scroll-stopping 3D ad visuals — built for brands, retailers, and businesses that want to stand out.
+    </p>
+    <div class="hero-cta">
+      <a href="#work" class="btn-primary">View Work</a>
+      <a href="#contact" class="btn-ghost">Let's Talk →</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">12+</div>
+      <div class="stat-label">Projects</div>
+    </div>
+    <div>
+      <div class="stat-num">360°</div>
+      <div class="stat-label">Interactive</div>
+    </div>
+    <div>
+      <div class="stat-num">4K</div>
+      <div class="stat-label">Renders</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>Product Visualization</span><span class="dot">✦</span>
+    <span>3D Modeling</span><span class="dot">✦</span>
+    <span>Blender</span><span class="dot">✦</span>
+    <span>Character Design</span><span class="dot">✦</span>
+    <span>Motion Graphics</span><span class="dot">✦</span>
+    <span>Ad Creatives</span><span class="dot">✦</span>
+    <span>Food Visualization</span><span class="dot">✦</span>
+    <span>Product Visualization</span><span class="dot">✦</span>
+    <span>3D Modeling</span><span class="dot">✦</span>
+    <span>Blender</span><span class="dot">✦</span>
+    <span>Character Design</span><span class="dot">✦</span>
+    <span>Motion Graphics</span><span class="dot">✦</span>
+    <span>Ad Creatives</span><span class="dot">✦</span>
+    <span>Food Visualization</span><span class="dot">✦</span>
+  </div>
+</div>
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">What We Do</div>
+      <h2>Our Services</h2>
+    </div>
+  </div>
+
+  <div class="services-grid">
+
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <span class="service-icon">📦</span>
+      <div class="service-title">Product 3D Modeling</div>
+      <div class="service-desc">
+        We model your product from scratch with photorealistic detail — textures, materials, and lighting crafted to match your brand identity. Perfect for e-commerce, catalogs, and social media.
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <span class="service-icon">🎯</span>
+      <div class="service-title">3D Ad Visuals</div>
+      <div class="service-desc">
+        Ready-to-publish 3D creatives designed to stop the scroll. We produce high-impact ad visuals for brands and retailers — built for Instagram, TikTok, and digital campaigns.
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <span class="service-icon">🗂️</span>
+      <div class="service-title">Ready-Made 3D Assets</div>
+      <div class="service-desc">
+        Browse and license our library of production-ready 3D models. Instant download, commercial use included — ideal for agencies and designers who need quality assets fast.
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <span class="service-icon">💻</span>
+      <div class="service-title">Programming</div>
+      <div class="service-desc">
+        We transform ideas into paltforms _ to make you able to publish your businesses all around the world online . <br>
+      <b> BY PROGRAMMING ALL YOUR IDEAS CAN BE REAL.</b>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WORK -->
+
+<section class="section" id="work">
+  
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Selected Work</div>
+      <h2>Projects</h2>
+    </div>
+    <a href="#contact" target="_blank" class="section-link">View All on Our social media sites→</a>
+  </div>
+  <div class="work-grid" id="workGrid">
+  </div>
+</section>
+
+
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div>
+    <div class="about-label">About SOLVEX</div>
+    <h2>We make<br>products iconic</h2>
+    <p class="about-text">
+      SOLVEX is a 3D creative studio specializing in ad visuals and product visualization for brands and retailers. We bridge the gap between your product and your audience — delivering cinematic 3D content that's built to perform.
+    </p>
+    <p class="about-text">
+      Every project is crafted with precision in Blender, from initial modeling to final render — photorealistic, interactive, and ready to publish.
+    </p>
+  </div>
+  <div>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <div class="skill-name">Modeling</div>
+        <div class="skill-bar"><div class="skill-fill" data-width="0.9"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Texturing</div>
+        <div class="skill-bar"><div class="skill-fill" data-width="0.85"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Lighting</div>
+        <div class="skill-bar"><div class="skill-fill" data-width="0.8"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Rendering</div>
+        <div class="skill-bar"><div class="skill-fill" data-width="0.88"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+
+  <div class="faq-intro">
+    <div class="faq-intro-tag">Got Questions?</div>
+    <h2 class="faq-intro-title">الأسئلة الشائعة<br><span style="color:var(--accent)">FAQ</span></h2>
+    <p class="faq-intro-text">كل ما تحتاج معرفته قبل أن تبدأ معنا. / Everything you need to know before you start with us.</p>
+  </div>
+
+  <!-- WHY 3D BLOCK -->
+  <div class="faq-why">
+    <div class="faq-why-title">🚀 لماذا تختار الإعلانات ثلاثية الأبعاد (3D) بدلاً من التصوير الواقعي؟</div>
+    <div class="faq-why-sub">في SOLVEX، نحن لا ننافس الكاميرا، بل نتجاوز حدودها. إليك لماذا يعتبر الـ 3D هو استثمارك الأذكى:</div>
+    <div class="faq-why-points">
+      <div class="faq-why-point">
+        <div class="faq-why-point-title">⚡ كسر حدود المستحيل</div>
+        <div class="faq-why-point-desc">الكاميرا الحقيقية مقيدة بالجاذبية والمكان؛ نحن نحرر منتجك ليطير، يتفكك، أو يسبح في عوالم خيالية تجذب الانتباه في ثوانٍ.</div>
+      </div>
+      <div class="faq-why-point">
+        <div class="faq-why-point-title">🔍 تفاصيل ما وراء العين</div>
+        <div class="faq-why-point-desc">يمكننا الدخول بـ "كاميرا افتراضية" داخل أصغر أجزاء منتجك لإظهار جودته الداخلية وتكنولوجيا تصنيعه بدقة مستحيل تصويرها واقعياً.</div>
+      </div>
+      <div class="faq-why-point">
+        <div class="faq-why-point-title">🎨 تحكم مُطلق في "المزاج"</div>
+        <div class="faq-why-point-desc">هل تريد شروق الشمس في منتصف الليل؟ أو تبديل لون المنتج وخامته بعد انتهاء العمل؟ في الـ 3D، التعديل متاح دائماً دون الحاجة لإعادة استئجار ستوديو أو طاقم عمل.</div>
+      </div>
+      <div class="faq-why-point">
+        <div class="faq-why-point-title">💎 الكمال البصري</div>
+        <div class="faq-why-point-desc">نحن نصنع الإضاءة والظلال "فوتون بفوتون" لنضمن أن منتجك يبدو في أبهى صورة ممكنة، متجاوزين عيوب التصوير التقليدي واللوجيستيات المعقدة.</div>
+      </div>
+    </div>
+    <div class="faq-why-closing" style="direction:rtl;">نحن في SOLVEX لا نصور الواقع.. نحن نصنع واقعاً أفضل.</div>
+  </div>
+
+  <!-- FAQ ACCORDION -->
+  <div class="faq-list">
+
+    <!-- Q1 -->
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">💰 هل الـ 3D يستحق التكلفة؟ / Is 3D worth the cost?</span>
+        <span class="faq-q-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-ar">
+          <div class="faq-lang-tag">العربية</div>
+          <p class="faq-answer-intro">في SOLVEX، نحن لا نبيع صورة — نحن نبني أصلاً رقمياً دائماً. إليك لماذا الـ 3D هو قرارك الأذكى:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">⚡</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">ادفع مرة، استخدم للأبد</div>
+                <div class="faq-point-desc">التصوير التقليدي يكلفك من جديد مع كل تعديل. في الـ 3D، الملف بين يديك وقابل للتعديل في أي وقت بدون تكاليف إضافية.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🔄</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">مرونة لا حدود لها</div>
+                <div class="faq-point-desc">لون جديد؟ زاوية مختلفة؟ موسم جديد؟ نعدّل في ساعات، لا في أيام.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">💎</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">جودة لا تتنازل عنها</div>
+                <div class="faq-point-desc">كل جنيه/ريال يذهب للجودة البصرية — لا لاستئجار ستوديو أو دفع طاقم عمل.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"نحن لا نأخذ منك ميزانية — نحن نضاعفها."</span>
+            <span class="faq-quote">"ادفع مرة، واجني إلى الأبد."</span>
+          </div>
+          <div class="faq-closing">في SOLVEX، التكلفة ليست مصروفاً.. إنها استثمار لا ينتهي عائده.</div>
+        </div>
+        <div class="faq-answer-en">
+          <div class="faq-lang-tag">English</div>
+          <p class="faq-answer-intro">At SOLVEX, we don't sell a photo — we build a permanent digital asset. Here's why 3D is your smartest decision:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">⚡</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Pay once, use forever</div>
+                <div class="faq-point-desc">Traditional photography charges you every time something changes. With 3D, the file is yours to modify anytime at no extra cost.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🔄</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Unlimited flexibility</div>
+                <div class="faq-point-desc">New color? Different angle? New season? We adjust in hours, not days.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">💎</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Uncompromised quality</div>
+                <div class="faq-point-desc">Every dollar goes toward visual excellence — not studio rentals, not crew fees.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"We don't take your budget — we multiply it."</span>
+            <span class="faq-quote">"Pay once, profit forever."</span>
+          </div>
+          <div class="faq-closing">At SOLVEX, the cost isn't an expense.. it's an investment that never stops paying back.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">✨ هل ستبدو النتيجة واقعية فعلاً؟ / Will the result actually look realistic?</span>
+        <span class="faq-q-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-ar">
+          <div class="faq-lang-tag">العربية</div>
+          <p class="faq-answer-intro">في SOLVEX، نحن لا نسعى للواقعية — نسعى لما هو أبعد منها. إليك كيف:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">🔍</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">دقة لا تراها العين</div>
+                <div class="faq-point-desc">كل فوتون من الضوء، كل انعكاس، كل ظل — يُحسَب بدقة رياضية لا تستطيع أي كاميرا تحقيقها.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🎨</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">منتجك في أبهى صورة</div>
+                <div class="faq-point-desc">نحن لا نصوّر منتجك كما هو — بل كما يجب أن يُرى. بلا عيوب، بلا إضاءة سيئة، بلا لحظات غير مثالية.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">💫</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">ما وراء الواقع</div>
+                <div class="faq-point-desc">في الـ 3D، المستحيل مجرد خيار لم تطلبه بعد.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"نحن لا نسعى لما يبدو حقيقياً — نسعى لما يبدو مثالياً."</span>
+            <span class="faq-quote">"الكاميرا تصور ما أمامها — نحن نصنع ما يجب أن يُرى."</span>
+          </div>
+          <div class="faq-closing">في SOLVEX، النتيجة ليست صورة لمنتجك.. بل أفضل نسخة ممكنة منه.</div>
+        </div>
+        <div class="faq-answer-en">
+          <div class="faq-lang-tag">English</div>
+          <p class="faq-answer-intro">At SOLVEX, we don't aim for realistic — we aim for beyond it. Here's how:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">🔍</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Precision beyond the eye</div>
+                <div class="faq-point-desc">Every photon of light, every reflection, every shadow — calculated with mathematical accuracy no camera can achieve.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🎨</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Your product at its finest</div>
+                <div class="faq-point-desc">We don't show your product as it is — we show it as it deserves to be seen. No flaws, no bad lighting, no imperfect moments.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">💫</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Beyond reality</div>
+                <div class="faq-point-desc">In 3D, the impossible is just an option you haven't requested yet.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"We don't aim for what looks real — we aim for what looks perfect."</span>
+            <span class="faq-quote">"A camera captures what's in front of it — we create what deserves to be seen."</span>
+          </div>
+          <div class="faq-closing">At SOLVEX, the result isn't a photo of your product.. it's the best version of it.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">📦 هل أحتاج لإرسال المنتج الفعلي؟ / Do I need to ship the actual product?</span>
+        <span class="faq-q-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-ar">
+          <div class="faq-lang-tag">العربية</div>
+          <p class="faq-answer-intro">في SOLVEX، نحن نبني من الصفر — لا نحتاج المنتج بين أيدينا. إليك كيف:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">📸</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">صور مرجعية فقط</div>
+                <div class="faq-point-desc">أرسل لنا صوراً واضحة من زوايا مختلفة — وفريقنا يبني الباقي بدقة كاملة.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🌍</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">بلا حدود جغرافية</div>
+                <div class="faq-point-desc">سواء كنت في القاهرة أو دبي أو لندن — نعمل معك بنفس الكفاءة والجودة.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">⚡</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">لا شحن، لا انتظار، لا تعقيدات</div>
+                <div class="faq-point-desc">منتجك يبقى عندك، وإعلانه يصل للعالم.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"منتجك لا يحتاج أن يسافر — إعلانه هو من يصل للعالم."</span>
+            <span class="faq-quote">"لا مسافات، لا حدود، لا عوائق — فقط نتيجة."</span>
+          </div>
+          <div class="faq-closing">في SOLVEX، المسافة ليست عائقاً.. إنها مجرد رقم لا يعنينا.</div>
+        </div>
+        <div class="faq-answer-en">
+          <div class="faq-lang-tag">English</div>
+          <p class="faq-answer-intro">At SOLVEX, we build from scratch — no physical product needed. Here's how:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">📸</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Reference photos only</div>
+                <div class="faq-point-desc">Send us clear photos from different angles — and our team builds everything with full precision.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🌍</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">No geographical limits</div>
+                <div class="faq-point-desc">Cairo, Dubai, or London — same quality, same efficiency.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">⚡</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">No shipping, no waiting, no complications</div>
+                <div class="faq-point-desc">Your product stays with you, its ad reaches the world.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"Your product doesn't need to travel — its ad reaches the world."</span>
+            <span class="faq-quote">"No distances, no borders, no barriers — just results."</span>
+          </div>
+          <div class="faq-closing">At SOLVEX, distance isn't a barrier.. it's just a number that means nothing to us.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">⏱️ كم يستغرق التسليم؟ / How long does delivery take?</span>
+        <span class="faq-q-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-ar">
+          <div class="faq-lang-tag">العربية</div>
+          <p class="faq-answer-intro">في SOLVEX، نحن لا نؤمن بالانتظار المجهول. إليك كيف ندير وقتك:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">📅</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">3 إلى 7 أيام</div>
+                <div class="faq-point-desc">حسب تعقيد المنتج — وتعرف الموعد بالضبط من اليوم الأول.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🔔</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">تحديثات مستمرة</div>
+                <div class="faq-point-desc">لن تبقى في الظلام لثانية واحدة — نُرسل لك مراحل العمل أولاً بأول.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">✅</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">لا مفاجآت</div>
+                <div class="faq-point-desc">الوقت المتفق عليه هو الوقت الفعلي. لأن احترام وقتك جزء من جودة عملنا.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"وقتك ليس رقماً نتجاهله — بل التزام نحترمه."</span>
+            <span class="faq-quote">"نعمل بسرعة لأننا نعرف أن فرصتك لا تنتظر."</span>
+          </div>
+          <div class="faq-closing">في SOLVEX، وقتك لا يقل قيمة عن إعلانك.</div>
+        </div>
+        <div class="faq-answer-en">
+          <div class="faq-lang-tag">English</div>
+          <p class="faq-answer-intro">At SOLVEX, we don't believe in silent waiting. Here's how we manage your time:</p>
+          <div class="faq-points">
+            <div class="faq-point">
+              <span class="faq-point-icon">📅</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">3 to 7 days</div>
+                <div class="faq-point-desc">Depending on complexity — and you know the exact deadline from day one.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">🔔</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">Continuous updates</div>
+                <div class="faq-point-desc">Never left in the dark — progress sent at every stage until final delivery.</div>
+              </div>
+            </div>
+            <div class="faq-point">
+              <span class="faq-point-icon">✅</span>
+              <div class="faq-point-content">
+                <div class="faq-point-title">No surprises</div>
+                <div class="faq-point-desc">The agreed timeline is the actual timeline. Because respecting your time is part of our quality standard.</div>
+              </div>
+            </div>
+          </div>
+          <div class="faq-motivational">
+            <span class="faq-quote">"Your time isn't a number we ignore — it's a commitment we honor."</span>
+            <span class="faq-quote">"We work fast because we know your opportunity won't wait."</span>
+          </div>
+          <div class="faq-closing">At SOLVEX, your time is just as valuable as your ad.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-tag">Get In Touch</div>
+  <div class="contact-big">
+    Got a product?<br><span class="outline">We'll make it</span> iconic.
+  </div>
+  <p style="color:var(--muted); font-size:0.95rem; max-width:420px; line-height:1.7;">
+    Whether you're a brand, a retailer, or an agency — if you need 3D ad visuals that actually perform, let's talk.
+  </p>
+  <div class="contact-links">
+    <a href="" class="contact-link">facebook</a>
+    <a href="https://www.tiktok.com/@solvexstudio?_r=1&_t=ZS-95e86zg8VYG" target="_blank" class="contact-link">Tiktok</a>
+    <a href="https://www.instagram.com/solvex__studio?utm_source=qr&igsh=a3RyNGhhNjFvMGRy" target="_blank" class="contact-link">Instagram</a>
+    <a href="https://wa.me/20XXXXXXXXXX" target="_blank" class="contact-link">WhatsApp</a>
+  </div>
+  <a href="/cdn-cgi/l/email-protection#5f26302a2d1f3a323e3633713c3032" class="btn-primary" style="margin-top:8px;">Send a Message</a>
+</section>
+
+<footer>
+  <div>© 2026 SOLVEX Studio — All Rights Reserved</div>
+  <div>Built with Blender & passion</div>
+</footer>
+
+<!-- MODAL (tabbed: Video / Images / 3D) -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+
+    <!-- Tabs -->
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabVideo" onclick="switchTab('video')">▶ Main</button>
+      <a class="modal-tab" id="tabImages" href="j.html">Phone store</a>
+      <a class="modal-tab" id="tabvideo" href="3dprojects.html">3D projects</a>
+    </div>
+
+    <!-- Video Panel -->
+    <div class="modal-panel active" id="panelVideo">
+      <div class="video-wrap" id="videoWrap"></div>
+    </div>
+
+    <!-- Images Panel -->
+    <div class="modal-panel" id="panelImages">
+      <div id="imagesGrid"></div>
+    </div>
+
+    <!-- 3D Panel -->
+    <div class="modal-panel" id="panel3d">
+      <div class="sketchfab-wrap" id="sketchfabWrap"></div>
+    </div>
+
+    <!-- Info -->
+    <div class="modal-body">
+      <div class="modal-header">
+        <div>
+          <div class="modal-cat" id="modalCat"></div>
+          <div class="modal-title" id="modalTitle"></div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-tags" id="modalTags"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ── FAQ Toggle ──
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  
+  const projects = [
+    {
+      title: "3D Advertisements",
+      icon: "🔮",
+      cat: "Product · Cosmetics",
+      desc: "Make your product become more popular by 3D ads ",
+      tags: ["Blender", "Luxury", "Caustics"],
+      thumb: null,
+      video: null,
+      images: [],
+      sketchfab: null
+    },
+    {
+      title: "Programming",
+      icon: "💻",
+      cat: "Product · Electronics",
+      desc: "Premium wireless headphones with detailed mesh, realistic rubber and metal materials. Shot with a clean dark studio setup. click phone store to see more",
+      tags: [ "Webs", "Studio Render", "Dark Theme"],
+      thumb: null,
+      video: null,
+      images: [],
+      sketchfab: null
+    }
+  ];
+  
+
+  // ── Build cards ──
+  const grid = document.getElementById('workGrid');
+  projects.forEach((p,i) => {
+    const hasVideo = !!p.video;
+    const hasImages = p.images && p.images.length > 0;
+    const has3D = !!p.sketchfab;
+
+    const thumbHTML = p.thumb
+      ? `<img src="" alt="${p.title}" loading="lazy">`
+      : `<div class="card-placeholder"><div class="placeholder-icon">${p.icon}</div><div class="placeholder-text"></div></div>`;
+
+    const badges = [
+      hasVideo ? '<span class="badge video">▶ Video</span>' : '',
+      hasImages ? `<span class="badge">🖼 ${p.images.length} Renders</span>` : '',
+      has3D ? '<span class="badge">⟳ 3D</span>' : ''
+    ].join('');
+
+    grid.innerHTML += `
+      <div class="work-card" onclick="openModal(${i})">
+        <div class="card-thumb">
+          ${thumbHTML}
+          <div class="card-badges">${badges}</div>
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-title">${p.title}</div>
+            <div class="card-cat">${p.cat}</div>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>`;
+  });
+
+  // ── Modal logic ──
+  let currentProject = null;
+
+  function openModal(idx) {
+    currentProject = projects[idx];
+    const p = currentProject;
+
+    document.getElementById('modalTitle').textContent = p.title;
+    document.getElementById('modalCat').textContent = p.cat;
+    document.getElementById('modalDesc').textContent = p.desc;
+    document.getElementById('modalTags').innerHTML = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+    switchTab('video');
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function switchTab(tab) {
+    ['video','images','3d'].forEach(t => {
+      document.getElementById('panelVideo').classList.toggle('active', t === 'video' && tab === 'video');
+      document.getElementById('panelImages').classList.toggle('active', t === 'images' && tab === 'images');
+      document.getElementById('panel3d').classList.toggle('active', t === '3d' && tab === '3d');
+      document.getElementById('tabVideo').classList.toggle('active', tab === 'video');
+      document.getElementById('tabImages').classList.toggle('active', tab === 'images');
+    });
+
+    if (!currentProject) return;
+    const p = currentProject;
+
+    if (tab === 'video') {
+      const wrap = document.getElementById('videoWrap');
+      if (p.video) {
+        const isLocal = !p.video.startsWith('http');
+        wrap.innerHTML = isLocal
+          ? `<video controls autoplay src="${p.video}"></video>`
+          : `<iframe src="${p.video}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+      } else {
+        wrap.innerHTML = `<div class="video-placeholder"><div class="play-icon">▶</div><p>No video yet — add a URL in the projects data</p></div>`;
+      }
+    }
+
+    if (tab === 'images') {
+      const grid = document.getElementById('imagesGrid');
+      if (p.images && p.images.length) {
+        grid.innerHTML = `<div class="images-grid">${p.images.map(src => `<img src="${src}" alt="" onclick="openLightbox('${src}')">`).join('')}</div>`;
+      } else {
+        grid.innerHTML = `<div class="images-placeholder"><div class="img-icon">🖼</div><p>No renders yet — add image URLs in the projects data</p></div>`;
+      }
+    }
+
+    if (tab === '3d') {
+      const wrap = document.getElementById('sketchfabWrap');
+      if (p.sketchfab) {
+        wrap.innerHTML = `<iframe src="${p.sketchfab}?autostart=1&ui_theme=dark&ui_infos=0&ui_watermark=0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>`;
+      } else {
+        wrap.innerHTML = `<div class="sketchfab-placeholder"><div class="sf-icon">⟳</div><p>No 3D model yet — add Sketchfab URL in the projects data</p></div>`;
+      }
+    }
+  }
+
+  function closeModal(e) {
+    if (!e || e.target === document.getElementById('modalOverlay') || e.currentTarget.tagName === 'BUTTON') {
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.getElementById('videoWrap').innerHTML = '';
+      document.getElementById('sketchfabWrap').innerHTML = '';
+      document.body.style.overflow = '';
+    }
+  }
+
+  // ── Lightbox ──
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('active');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); closeLightbox(); }
+  });
+
+  // ── Skill bars ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+          bar.style.transform = `scaleX(${bar.dataset.width})`;
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelector('.skills-grid') && observer.observe(document.querySelector('.skills-grid'));
+  
+</script>
+
+<script>
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // SOLVEX — Content Protection Layer v2
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  // 1. Disable right-click
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // 2. Disable text selection via CSS + JS
+  document.addEventListener('selectstart', e => e.preventDefault());
+  document.addEventListener('copy', e => e.preventDefault());
+  document.addEventListener('cut', e => e.preventDefault());
+
+  // 3. Block keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    const blocked = (
+      (e.ctrlKey && ['u','s','p','a','c','x'].includes(e.key.toLowerCase())) ||
+      (e.ctrlKey && e.shiftKey && ['i','j','c','k'].includes(e.key.toLowerCase())) ||
+      e.key === 'F12'
+    );
+    if (blocked) e.preventDefault();
+  });
+
+  // 4. DevTools detection — freeze page if opened
+  let devOpen = false;
+  const threshold = 160;
+  const detectDevTools = () => {
+    if (
+      window.outerWidth - window.innerWidth > threshold ||
+      window.outerHeight - window.innerHeight > threshold
+    ) {
+      if (!devOpen) {
+        devOpen = true;
+        document.body.innerHTML = `
+          <div style="
+            background:#0f0e11;color:#7c6af7;
+            display:flex;flex-direction:column;
+            align-items:center;justify-content:center;
+            height:100vh;font-family:monospace;text-align:center;gap:16px;
+          ">
+            <div style="font-size:3rem;">⚠</div>
+            <div style="font-size:1.5rem;font-weight:900;letter-spacing:0.2em;">SOLVEX STUDIO</div>
+            <div style="color:#e8e5f0;font-size:0.9rem;opacity:0.7;">
+              This content is protected.<br>Unauthorized access is prohibited.
+            </div>
+          </div>`;
+      }
+    } else {
+      devOpen = false;
+    }
+  };
+  setInterval(detectDevTools, 1000);
+
+  // 5. DevTools console warning
+  const devWarning = () => {
+    console.clear();
+    console.log('%c⚠  SOLVEX STUDIO', 'color:#7c6af7;font-size:2rem;font-weight:900;font-family:monospace;');
+    console.log('%cThis site and its content are protected.\nUnauthorized copying or use is prohibited.\n© 2025 SOLVEX Studio', 'color:#e8e5f0;font-size:0.9rem;font-family:monospace;');
+  };
+  devWarning();
+  setInterval(devWarning, 3000);
+
+  // 6. Disable drag on images + pointer events
+  document.querySelectorAll('img').forEach(img => {
+    img.setAttribute('draggable', 'false');
+    img.addEventListener('dragstart', e => e.preventDefault());
+  });
+
+  // 7. Watermark ownership in DOM
+  const mark = document.createElement('meta');
+  mark.name = 'copyright';
+  mark.content = '© 2025 SOLVEX Studio — All Rights Reserved';
+  document.head.appendChild(mark);
+
+  // 8. Block print screen via CSS (hide content on print)
+  const printStyle = document.createElement('style');
+  printStyle.innerHTML = `@media print { body { display: none !important; } }`;
+  document.head.appendChild(printStyle);
+</script>
+</body>
+</html>
