@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+}
+
+div.home {
+    background-image: url(PIC/Gemini_Generated_Image_pniz5opniz5opniz.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: cover;
+    background-position: center;
+    height: 750px;
+    width: auto;
+}
+
+div.home img {
+    margin-left: 50px;
+
+
+}
+
+div.home h1 {
+    color: rgb(1, 104, 141);
+    display: inline;
+    position: absolute;
+    margin-top: 10px;
+    font-size: 40px;
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+div.home .navbar {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.668)5%, rgba(0, 0, 0, 0.545), rgb(174, 174, 174), rgb(204, 190, 168) 88%, rgba(0, 0, 0, 0.545));
+    border-radius: 50px;
+    padding: 20px;
+    position: absolute;
+    left: auto;
+    top: 10%;
+    right: 0;
+    font-family: sans-serif;
+
+
+}
+
+div.home .navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 57px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+div.home .navbar ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+div.home p {
+    display: inline;
+    position: absolute;
+    top: 30%;
+    left: 50px;
+    font-size: 50px;
+    padding: 10px;
+    font-family: sans-serif;
+    color: rgba(255, 255, 255, 0.608);
+}
+
+div.home .list ul {
+    list-style: none;
+    background-color: rgb(174, 174, 174);
+    border-radius: 25px;
+    text-align: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 5px;
+    width: 125px;
+    height: 275px;
+    font-family: sans-serif;
+}
+
+div.home .list ul li {
+    margin-top: 30px;
+
+}
+
+div.home .list {
+    /* display: none; */
+    cursor: pointer;
+    position: relative;
+    top: 7%;
+    left: 65.5%;
+    font-family: sans-serif;
+    font-size: 18px;
+}
+
+div.aboutus {
+    background-position: center;
+    height: 668px;
+    width: auto;
+    padding-right: 210px;
+    padding-left: 210px;
+    word-spacing: 7px;
+    font-family: "Lobster Two", sans-serif;
+    font-style: italic;
+    font-size: 25px;
+
+}
+
+div.aboutus p {
+    display: flex;
+
+}
+
+div.aboutus h1 {
+    font-family: sans-serif;
+    color: rgb(0, 110, 150);
+    text-align: center;
+    justify-content: center;
+}
+
+div.projects {
+    font-family: sans-serif;
+    color: rgb(0, 110, 150);
+    text-align: center;
+    justify-content: center;
+    font-size: 25px;
+
+}
+
+.show {
+    display: block;
+}

@@ -1,0 +1,461 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  background-color: black;
+  color: white;
+  margin: 0;
+  text-align: center;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* html{
+  scroll-behavior: smooth;
+} */
+.navbar {
+  width: 100%;
+  height: 50px;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  gap: 10px;
+
+}
+
+
+.navbar li {
+  margin: 0 15px;
+  font-size: 18px;
+  letter-spacing: 2px;
+  overflow: hidden;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+}
+
+.navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: rgb(0, 174, 255);
+}
+
+.mac {
+  margin-top: 70px;
+  text-align: center;
+  justify-content: center;
+}
+
+.mac h1 {
+  font-size: 30px;
+}
+
+.mac label {
+  margin-top: 20px;
+  position: relative;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+.mac button {
+  font-size: 20px;
+  position: relative;
+  padding: 20px 25px;
+  color: #03e9f4;
+  transition: all 0.5s ease-in-out;
+  overflow: hidden;
+  border: none;
+  margin-bottom: 20px;
+  display: inline-block;
+  text-align: center;
+  justify-content: center;
+  position: relative;
+  right: 29%;
+  /* filter: hue-rotate(18z0deg); */
+}
+
+.mac button:hover {
+  color: #050801;
+  background-color: #03e9f4;
+  box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 200px #03e9f4;
+}
+
+.mac button span:nth-child(1) {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #03e9f4);
+  animation: animate1 1s linear infinite;
+}
+
+.mac button span {
+  position: absolute;
+  display: block;
+}
+
+@keyframes animate1 {
+  0% {
+    left: -100%;
+  }
+
+  50%,
+  100% {
+    left: 100%;
+  }
+}
+
+.mac button span:nth-child(2) {
+  top: -100%;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #03e9f4);
+  animation: animate2 1s linear infinite;
+  animation-delay: 0.25s;
+}
+
+@keyframes animate2 {
+  0% {
+    top: -100%;
+  }
+
+  50%,
+  100% {
+    top: 100%;
+  }
+}
+
+.mac button span:nth-child(3) {
+  bottom: 0%;
+  right: 0%;
+  width: 100%;
+  height: 2px;
+  background-color: linear-gradient(270deg, transparent, #03e9f4);
+  animation: animate3 1s linear infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes animate3 {
+  0% {
+    right: -100%;
+  }
+
+  50%,
+  100% {
+    right: 100%;
+  }
+}
+
+.mac button span:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, #03e9f4);
+  animation: animate4 1s linear infinite;
+  animation-delay: 0.75s;
+}
+
+@keyframes animate4 {
+  0% {
+    bottom: -100%;
+  }
+
+  50%,
+  100% {
+    bottom: 100%;
+  }
+}
+
+.laptop h1 {
+  color: rgb(193, 193, 193);
+  text-align: initial;
+  margin-left: 100px;
+  margin-bottom: 50px;
+}
+
+.laptop span {
+  margin-top: 20px;
+  letter-spacing: 1px;
+  margin-bottom: 50px;
+}
+
+.M4 {
+  overflow: hidden;
+}
+
+.M4 ul li span {
+  color: rgb(193, 193, 193);
+}
+
+.M4 ul {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 20px;
+  position: relative;
+  margin-top: 20px;
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(70px);
+}
+
+.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.show img {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.box {
+  overflow: hidden;
+  padding: 5px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.8s ease;
+}
+
+section {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+section .wrapper img {
+  position: absolute;
+  width: 500px;
+  transform: translate(-50%, 50%);
+  right: 15%;
+  margin-top: 200px;
+}
+
+#p1 {
+  transform: translate(-610px, -300px) scale(0.6);
+  width: 700px;
+}
+
+#p2 {
+  transform: translate(0px, -300px) scale(0.6);
+  width: 800px;
+  z-index: 1;
+}
+
+#p3 {
+  transform: translate(210px, -160px) scale(0.6);
+  width: 700px;
+  z-index: 0;
+}
+
+#p4 {
+  transform: translate(300px, 160px) scale(0.6);
+  width: 700px;
+}
+
+#p5 {
+  z-index: 1000;
+}
+
+#p6 {
+  transform: translate(-700px, -20px) scale(0.55) rotate(-5deg);
+  z-index: 1;
+}
+
+#p7 {
+  transform: translate(-610px, 200px);
+
+}
+
+.content {
+  overflow: hidden;
+  margin-bottom: 25px;
+  width: 500px;
+  position: relative;
+  transform: translate(-50%, -50%);
+  left: 50%;
+}
+
+.container {
+  /* width: 1000px ; */
+  overflow: hidden;
+  position: relative;
+  margin-top: 50px;
+  margin-bottom: 70px;
+  justify-content: center;
+  text-align: center;
+  align-content: center;
+
+}
+
+.container .w {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.container .monster {
+  background-image: url(apple-macbook_public/public/highlight-bg.png);
+  background-position: center;
+  background-size: cover;
+  padding: 60px;
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 50px;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  margin-left: 300px;
+}
+
+.container .monster img,
+.container .monster p {
+  background-color: rgba(5, 8, 1, 0);
+
+}
+
+.container .monster p {
+  font-size: 30px;
+  text-align: initial;
+}
+
+.container .bigapple {
+  background: linear-gradient(to right, blue, rgb(225, 0, 225), red, rgb(253, 122, 0));
+  border-radius: 25px;
+  width: 600px;
+  height: 200px;
+  overflow: hidden;
+  margin-top: 10px;
+position: relative;
+right: 25%;
+
+}
+
+.container .apple {
+  margin-top: 3px;
+  border-radius: 25px;
+  overflow: hidden;
+  height: 96%;
+  width: 98%;
+}
+
+.container .apple img {
+  display: inline-block;
+  text-align: right;
+  justify-content: right;
+  margin-right: 450px;
+  margin-top: 50px;
+
+}
+
+.container .apple p:nth-of-type(1) {
+  display: flex;
+  position: absolute;
+  text-align: center;
+  justify-content: center;
+  margin-left: 200px;
+  bottom: 100px;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+}
+
+.container .apple p:nth-of-type(2) {
+  background: linear-gradient(to right, blue, rgb(225, 0, 225), red, rgb(253, 122, 0));
+  font-size: 40px;
+  margin-left: 250px;
+  width: 400px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  position: absolute;
+  text-align: center;
+  justify-content: center;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.container .monster,
+.container .apple,
+.container .sun,
+.container .battery {
+  display: inline-block;
+}
+
+.container .sun {
+  font-size: 20px;
+  border-radius: 25px;
+  background-color: #242424;
+  width: 600px;
+  margin-left: 300px;
+}
+
+.container .sun img,
+.container .sun p {
+  background-color: #05080100;
+  display: inline-block;
+}
+
+.container .battery {
+  background-color: #242424;
+  font-size: 20px;
+  border-radius: 25px;
+  width: 200px;
+  position: relative;
+  bottom: 40%;
+}
+
+.container .battery img,
+.container .battery p {
+  background-color: #05080100;
+  display: inline-block;
+}
+.container .battery p {
+   background: linear-gradient(to right, white,white);
+  background-clip: text;
+  width: 200px;
+  -webkit-background-clip: text;
+  color: transparent; 
+}
+.container .battery p:nth-of-type(2) {
+  background: linear-gradient(to right, rgb(0, 213, 163), rgb(0, 234, 0));
+  background-clip: text;
+  width: 200px;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.access a {
+  color: rgb(44, 93, 255);
+  transition: all 0.5s ease-in-out;
+}
+
+.access a:hover {
+  color: white;
+  text-shadow: 0 0 5px white, 0 0 25px white, 0 0 50px white, 0 0 200px white;
+}

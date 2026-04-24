@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3d projects studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    * {
+        background-color: black;
+        color: white;
+        margin: 0;
+        text-align: center;
+        overflow-x: hidden;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .lights {
+        padding-bottom: 50px;
+    }
+
+    .lights button {
+        font-size: 20px;
+        position: relative;
+        left: 48%;
+        margin-top: 650px;
+        display: inline-block;
+        padding: 20px 25px;
+        color: #03e9f4;
+        transition: all 0.5s ease-in-out;
+        overflow: hidden;
+        border: none;
+        /* filter: hue-rotate(180deg); */
+
+    }
+
+    .lights button:hover {
+        color: #050801;
+        background-color: #03e9f4;
+        box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 200px #03e9f4;
+    }
+
+    .lights button span:nth-child(1) {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #03e9f4);
+        animation: animate1 1s linear infinite;
+    }
+
+    .lights button span {
+        position: absolute;
+        display: block;
+    }
+
+    @keyframes animate1 {
+        0% {
+            left: -100%;
+        }
+
+        50%,
+        100% {
+            left: 100%;
+        }
+    }
+
+    .lights button span:nth-child(2) {
+        top: -100%;
+        right: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(180deg, transparent, #03e9f4);
+        animation: animate2 1s linear infinite;
+        animation-delay: 0.25s;
+    }
+
+    @keyframes animate2 {
+        0% {
+            top: -100%;
+        }
+
+        50%,
+        100% {
+            top: 100%;
+        }
+    }
+
+    .lights button span:nth-child(3) {
+        bottom: 0%;
+        right: 0%;
+        width: 100%;
+        height: 2px;
+        background-color: linear-gradient(270deg, transparent, #03e9f4);
+        animation: animate3 1s linear infinite;
+        animation-delay: 0.5s;
+    }
+
+    @keyframes animate3 {
+        0% {
+            right: -100%;
+        }
+
+        50%,
+        100% {
+            right: 100%;
+        }
+    }
+
+    .lights button span:nth-child(4) {
+        bottom: -100%;
+        left: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(360deg, transparent, #03e9f4);
+        animation: animate4 1s linear infinite;
+        animation-delay: 0.75s;
+    }
+
+    @keyframes animate4 {
+        0% {
+            bottom: -100%;
+        }
+
+        50%,
+        100% {
+            bottom: 100%;
+        }
+    }
+
+    video {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .wrapper {
+        position: absolute;
+        width: auto;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        gap: 50px;
+        padding-left: 225px;
+
+    }
+
+    .wrapper .video-box {
+        position: relative;
+        height: 600px;
+        width: 1100px;
+        border-radius: 50px;
+    }
+
+    .lights a {
+        text-decoration: none;
+        display: flex;
+        text-align: right;
+        justify-content: right;
+        color: rgb(37, 37, 193);
+        font-size: 20px;
+        margin-right: 50px;
+    }
+
+    .lights a:hover {
+        color: white;
+        text-decoration: underline;
+    }
+</style>
+
+<body>
+
+    <div class="lights" style="text-align: initial;margin-top:100px;">
+        <span style="text-align: initial; font-size: 50px;font-weight: bold;margin-left: 50px;"> 3D projects </span>
+        <div class="wrapper">
+            <div class="video-box">
+                <video loading="lazy" loop autoplay muted>
+                    <source src="">
+                </video>
+            </div>
+            <div class="video-box">
+                <video loading="lazy" autoplay muted loop>
+                    <source src="">
+                </video>
+            </div>
+            <div class="video-box">
+                <video loading="lazy" autoplay muted loop>
+                    <source src="">
+                </video>
+            </div>
+            <div class="video-box">
+                <video loading="lazy" autoplay muted loop>
+                    <source src="">
+                </video>
+            </div>
+        </div>
+        <button onclick="change()">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+            NEXT<i class="fa-solid fa-right-long" style="background-color: inherit;color: inherit;"></i></button>
+    </div>
+    <script>
+        let videos = document.getElementsByClassName("video-box");
+        current = 0;
+        function change() {
+            videos[current].style.display = "none";
+            current++;
+            if (current == 4) {
+                current = 0
+            }
+            videos[current].style.display = "block";
+        }
+    </script>
+</body>
+
+</html>
